@@ -284,9 +284,7 @@
 
   /* CHECKLIST */
   .checklist-phase { margin-bottom: 40px; }
-  .checklist-week {
-    margin-bottom: 20px;
-  }
+  .checklist-week { margin-bottom: 20px; }
   .week-label {
     font-family: 'IBM Plex Mono', monospace;
     font-size: 11px;
@@ -296,7 +294,11 @@
     margin-bottom: 10px;
     padding-bottom: 8px;
     border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
+  .week-progress { font-size: 10px; color: var(--accent1); }
   .checklist-items { display: flex; flex-direction: column; gap: 6px; }
   .checklist-item {
     display: flex;
@@ -307,19 +309,45 @@
     border: 1px solid var(--border);
     border-radius: 8px;
     font-size: 13px;
-    transition: border-color 0.2s;
+    transition: all 0.2s;
+    cursor: pointer;
+    user-select: none;
   }
-  .checklist-item:hover { border-color: #2a3448; }
+  .checklist-item:hover { border-color: #2a3448; background: #121720; }
+  .checklist-item.done {
+    border-color: rgba(0,229,160,0.25);
+    background: rgba(0,229,160,0.04);
+  }
+  .checklist-item.done .check-text { color: var(--text-muted); text-decoration: line-through; text-decoration-color: rgba(0,229,160,0.4); }
+  .checklist-item.done .check-text strong { color: var(--text-muted); }
+
+  /* Custom checkbox */
   .check-box {
-    width: 16px; height: 16px;
+    width: 18px; height: 18px;
     border: 1.5px solid var(--border);
-    border-radius: 4px;
+    border-radius: 5px;
     flex-shrink: 0;
-    margin-top: 2px;
+    margin-top: 1px;
     background: var(--bg3);
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+    position: relative;
   }
-  .check-text { color: var(--text-dim); flex: 1; line-height: 1.5; }
-  .check-text strong { color: var(--text); }
+  .checklist-item.done .check-box {
+    background: var(--accent1);
+    border-color: var(--accent1);
+  }
+  .checklist-item.done .check-box::after {
+    content: '';
+    width: 5px; height: 9px;
+    border: 2px solid #0a0c10;
+    border-top: none; border-left: none;
+    transform: rotate(45deg) translateY(-1px);
+    display: block;
+  }
+
+  .check-text { color: var(--text-dim); flex: 1; line-height: 1.5; transition: all 0.2s; }
+  .check-text strong { color: var(--text); transition: all 0.2s; }
   .check-tag {
     font-family: 'IBM Plex Mono', monospace;
     font-size: 10px;
@@ -333,6 +361,61 @@
   .tag-strat { background: rgba(59,130,246,0.1); color: var(--accent2); }
   .tag-tech { background: rgba(245,158,11,0.1); color: var(--accent3); }
   .tag-skill { background: rgba(236,72,153,0.1); color: var(--accent4); }
+
+  /* Progress bar */
+  .overall-progress {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 32px;
+  }
+  .progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .progress-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .progress-count {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--accent1);
+  }
+  .progress-count span { color: var(--text-muted); font-size: 13px; font-weight: 400; }
+  .progress-bar-wrap {
+    height: 6px;
+    background: var(--bg3);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent1), #00b4d8);
+    border-radius: 99px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+  .progress-phases {
+    display: flex;
+    gap: 16px;
+    margin-top: 12px;
+  }
+  .phase-stat {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .phase-stat strong { font-family: 'IBM Plex Mono', monospace; }
+  .phase-stat.p1 strong { color: var(--accent1); }
+  .phase-stat.p2 strong { color: var(--accent2); }
+  .phase-stat.p3 strong { color: var(--accent3); }
 
   /* DIVIDER */
   .divider {
@@ -740,7 +823,22 @@
   <!-- ========== CHECKLIST ========== -->
   <div>
     <div class="section-title">📋 Checklist Thực Thi 12 Tuần</div>
-    <div class="section-desc">Breakdown từng tuần cụ thể. Tag màu: <span class="tag tag-data">DATA</span> Phân tích · <span class="tag tag-strat">STRAT</span> Chiến lược · <span class="tag tag-tech">TECH</span> Kỹ thuật · <span class="tag tag-skill">SKILL</span> Học tập</div>
+    <div class="section-desc">Nhấn vào từng task để đánh dấu hoàn thành. Tiến độ được lưu tự động. Tag màu: <span class="tag tag-data">DATA</span> Phân tích · <span class="tag tag-strat">STRAT</span> Chiến lược · <span class="tag tag-tech">TECH</span> Kỹ thuật · <span class="tag tag-skill">SKILL</span> Học tập</div>
+
+    <div class="overall-progress">
+      <div class="progress-header">
+        <div class="progress-label">Tiến độ tổng thể 90 ngày</div>
+        <div class="progress-count"><span id="done-count">0</span>/<span id="total-count">0</span> <span>tasks hoàn thành</span></div>
+      </div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="progress-fill"></div>
+      </div>
+      <div class="progress-phases">
+        <div class="phase-stat p1">Tháng 1: <strong id="p1-count">0/0</strong></div>
+        <div class="phase-stat p2">Tháng 2: <strong id="p2-count">0/0</strong></div>
+        <div class="phase-stat p3">Tháng 3: <strong id="p3-count">0/0</strong></div>
+      </div>
+    </div>
 
     <!-- MONTH 1 -->
     <div class="checklist-phase">
@@ -1060,5 +1158,52 @@
   </div>
 
 </div>
+
+<script>
+  const phases = document.querySelectorAll('.checklist-phase');
+  let globalIndex = 0;
+  phases.forEach((phase, pi) => {
+    const items = phase.querySelectorAll('.checklist-item');
+    items.forEach(item => {
+      item.dataset.id = 'task-' + globalIndex;
+      item.dataset.phase = pi + 1;
+      globalIndex++;
+    });
+  });
+
+  function loadState() {
+    try { return JSON.parse(localStorage.getItem('vigo-checklist') || '{}'); } catch(e) { return {}; }
+  }
+  function saveState(s) {
+    try { localStorage.setItem('vigo-checklist', JSON.stringify(s)); } catch(e) {}
+  }
+
+  const state = loadState();
+  document.querySelectorAll('.checklist-item').forEach(item => {
+    if (state[item.dataset.id]) item.classList.add('done');
+    item.addEventListener('click', () => {
+      item.classList.toggle('done');
+      const s = loadState();
+      s[item.dataset.id] = item.classList.contains('done');
+      saveState(s);
+      updateProgress();
+    });
+  });
+
+  function updateProgress() {
+    const all = document.querySelectorAll('.checklist-item');
+    const done = document.querySelectorAll('.checklist-item.done');
+    document.getElementById('total-count').textContent = all.length;
+    document.getElementById('done-count').textContent = done.length;
+    const pct = all.length ? Math.round(done.length / all.length * 100) : 0;
+    document.getElementById('progress-fill').style.width = pct + '%';
+    [1,2,3].forEach(p => {
+      const pAll = document.querySelectorAll('.checklist-item[data-phase="' + p + '"]');
+      const pDone = document.querySelectorAll('.checklist-item[data-phase="' + p + '"].done');
+      document.getElementById('p' + p + '-count').textContent = pDone.length + '/' + pAll.length;
+    });
+  }
+  updateProgress();
+</script>
 </body>
 </html>
